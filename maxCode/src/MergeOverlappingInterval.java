@@ -25,17 +25,21 @@ public class MergeOverlappingInterval {
                 return o1.start - o2.start;
             }
         });
-
-        int start = arr[0].start;
-        int end = arr[0].end;
-        for(Interval interval : arr){
-            if(interval.start > end){
-                result.add(interval);
-                start = interval.start;
-                end = interval.end;
+        int start =0, end = 0;
+        for(int i=0; i< arr.length-1; i++){
+            if(arr[i].end < arr[i+1].start){
+                result.add(arr[i]);
             }
-            else{
-                end = Math.max(end,interval.end);
+            else if(arr[i].end > arr[i+1].start && (start == 0 && end ==0)){
+                start = arr[i].start;
+                end = Math.max(arr[i].end, arr[i+1].end);
+            }
+            else if(start != 0 && end !=0 && (arr[i].start < end)){
+                end = Math.max(end,arr[i].end);
+            }
+            else if(start != 0 && end!=0 && arr[i].start > end){
+                result.add(new Interval(start , end));
+                start = end = 0;
             }
         }
         return result;
